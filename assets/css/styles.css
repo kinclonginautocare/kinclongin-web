@@ -267,6 +267,26 @@ z-index: var(--z-fixed);
   font-size: var(--biggest-font-size);
 }
 
+.home__title::after {
+  content: ""; /* Isinya kosong */
+  position: absolute;
+  right: -15px; /* Jarak kursor dari akhir teks SALON */
+  top: 50%;
+  transform: translateY(-50%); /* Biar vertikalnya di tengah teks */
+  width: 4px; /* Lebar kursor putih lu */
+  height: 80%; /* Tinggi kursor, buat 80% dari tinggi teks biar gak kepanjangan */
+  background-color: white; /* Warna garis putih */
+  
+  /* --- BAGIAN INI UNTUK ANIMASI KEDIP --- */
+  animation: blink-caret 0.75s step-end infinite;
+}
+
+/* Definisi Gerakan Animasi Kedip */
+@keyframes blink-caret {
+  from, to { background-color: transparent; } /* Garis ilang */
+  50% { background-color: white; } /* Garis muncul */
+}
+
 .home__img{
   max-width: initial;
   width: 400px;
@@ -421,6 +441,7 @@ z-index: var(--z-fixed);
   margin-bottom: 2rem;
   max-width: 500px;
   margin-inline: auto;
+  font-style: italic;
 }
 
 .about__img{
@@ -681,6 +702,66 @@ z-index: var(--z-fixed);
   transform: scale(1.1);
 }
 
+/*=============== SOCIAL MEDIA ===============*/
+.socialmedia{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: var(--black-color);
+  min-height: 100vh;
+  position: relative;
+  padding-block: 4rem 2rem;
+}
+
+.socialmedia__container{
+  width: 100%; 
+  max-width: 1200px; /* Batasin biar gak lebar banget di monitor raksasa */
+  margin-inline: auto;
+}
+
+.socialmedia__item{
+  position: relative;
+  overflow: hidden;
+  border-radius: .75rem;
+  cursor: pointer;
+}
+
+.socialmedia__img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .4s;
+}
+
+.socialmedia__overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: hsla(0, 0%, 0%, .5);
+  display: grid;
+  place-items: center;
+  color: var(--white-color);
+  font-size: 2rem;
+  opacity: 0;
+  transition: opacity .4s;
+}
+
+.socialmedia__item:hover .socialmedia__overlay{
+  opacity: 1;
+}
+
+.socialmedia__item:hover .socialmedia__img{
+  transform: scale(1.1);
+}
+
+.elfsight-app-9c30d31d-3bf1-45f0-b2aa-70da40772757 {
+  width: 100%;
+}
+
 /*=============== CONTACT ===============*/
 .contact{
   display: flex;
@@ -792,7 +873,7 @@ z-index: var(--z-fixed);
 }
 
 .whatsapp-button i {
-  font-size: 1.3rem;
+  font-size: 3rem;
   color: var(--white-color);
 }
 
@@ -860,13 +941,22 @@ z-index: var(--z-fixed);
   text-align: center;
 }
 
-.footer__logo{
-  justify-content: center;
+.footer__logo {
+  display: flex;            /* Aktifkan flexbox */
+  justify-content: center;   /* Geser konten ke tengah secara horizontal */
+  align-items: center;       /* Jaga agar tetap sejajar secara vertikal */
   margin-bottom: 1rem;
+  width: 100%;               /* Pastikan pembungkusnya selebar layar/kontainer */
+}
+
+.footer__logo img {
+  width: 100px;              /* Ukuran sesuai permintaan lu */
+  height: auto;              /* Biar rasionya nggak penyok */
 }
 
 .footer__description {
   color: hsl(0, 0%, 60%);
+  margin-top: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -1171,6 +1261,12 @@ z-index: var(--z-fixed);
   }
 }
 
+/* Definisi Gerakan Animasi Kedip */
+@keyframes blink-caret {
+  from, to { background-color: transparent; } /* Garis ilang */
+  50% { background-color: white; } /* Garis muncul */
+}
+
 /* For mobile color correction */
 @media screen and (max-width: 1149px) {
   .active-yellow .contact__description {
@@ -1181,17 +1277,24 @@ z-index: var(--z-fixed);
   .whatsapp-button__tooltip {
     display: none;
   }
+  .whatsapp-button i {
+    font-size: 1.2rem;
+    color: var(--white-color);
+  }
+  .social__embed-card {
+      max-width: 100%;
+   }
 }
 
 /* For taller devices */
-@media screen and (max-width 1150px) and (min-height: 800px){
+@media screen and (max-width: 1150px) and (min-height: 800px){
 .home__content{
     align-content: space-around;
     row-gap: 3rem;
   }
 }
 
-@media screen and (max-width 1150px) and (min-height: 800px){
+@media screen and (max-width: 1150px) and (min-height: 800px){
   .home__article{
     padding-top: 7rem;
   }
@@ -1200,7 +1303,7 @@ z-index: var(--z-fixed);
   }
 }
 
-@media screen and (max-width 1150px) and (min-height: 1000px){
+@media screen and (max-width: 1150px) and (min-height: 1000px){
   .home__swiper,
   .home__article,
   .home__interaction{

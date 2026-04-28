@@ -68,23 +68,38 @@ const syncThemeColor = (swiper) => {
 }
 
 const swiperHome = new Swiper('.home__swiper', {
-    speed: 1200,
-    effect: 'fade',
-  pagination: {
-    el: '.home .swiper-pagination',
-    clickable: true,
-    renderBullet: (index, className) => {
-          return '<span class="' + className + '">' + String(index + 1).padStart(2, '0') + "</span>";
-        },
-  },
-  on: {
-    init: function(){
-        syncThemeColor(this)
+    slidesPerView: 1,
+    spaceBetween: 10,
+    loop: true,
+    
+    // TAMBAHKAN INI (dalam milidetik)
+    speed: 1500, // Ini durasi transisi perpindahan fotonya (1.5 detik) agar smooth
+
+    autoplay: {
+        delay: 7000, // Ini durasi nunggu di setiap slide (5 detik)
+        disableOnInteraction: false,
     },
-    slideChange: function(){
-        syncThemeColor(this)
+    
+    effect: 'fade',
+    fadeEffect: {
+        crossFade: true // Biar transisi antar gambar nggak tumpang tindih aneh
+    },
+
+    pagination: {
+        el: '.home .swiper-pagination',
+        clickable: true,
+        renderBullet: (index, className) => {
+            return '<span class="' + className + '">' + String(index + 1).padStart(2, '0') + "</span>";
+        },
+    },
+    on: {
+        init: function(){
+            syncThemeColor(this)
+        },
+        slideChange: function(){
+            syncThemeColor(this)
+        }
     }
-  }
 })
 
 /*=============== GSAP ANIMATION ===============*/
@@ -305,3 +320,43 @@ const scrollActive = () =>{
 	})
 }
 window.addEventListener('scroll', scrollActive)
+
+/*=============== GALLERY GDRIVE ===============*/
+async function loadAutoGallery() {
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwZWU3cwwLLDRgnZUxRn16eOD2eV8DdV6kqpp8zANNAO8INe10YvIFVrJuu-LwOAWnSNQ/exec'; // Ganti pake URL Web App lu
+    const galleryContainer = document.getElementById('gallery-content');
+
+    try {
+        const response = await fetch(scriptUrl);
+        const images = await response.json();
+
+        // Kosongkan kontainer sebelum diisi
+        galleryContainer.innerHTML = '';
+
+        images.forEach(img => {
+            const driveImgUrl = `https://lh3.googleusercontent.com/d/${img.id}`;
+            
+            const item = `
+                <a href="${driveImgUrl}" class="gallery__item glightbox" data-gallery="mygallery">
+                    <img src="${driveImgUrl}" alt="${img.name}" class="gallery__img" loading="lazy">
+                    <div class="gallery__overlay">
+                        <i class="ri-add-line"></i>
+                    </div>
+                </a>
+            `;
+            galleryContainer.innerHTML += item;
+        });
+
+        // PENTING: Refresh GLightbox setelah gambar masuk
+        const lightbox = GLightbox({
+            selector: '.glightbox'
+        });
+
+    } catch (error) {
+        console.error("Waduh, gagal narik galeri:", error);
+        galleryContainer.innerHTML = '<p>Gagal memuat galeri. Cek koneksi atau izin folder Drive.</p>';
+    }
+}
+
+// Panggil fungsinya
+loadAutoGallery();

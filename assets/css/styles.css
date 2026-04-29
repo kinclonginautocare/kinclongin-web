@@ -865,7 +865,6 @@ z-index: var(--z-fixed);
   display: inline-flex;
   z-index: var(--z-fixed);
   transition: transform .4s;
-  position: relative; /* Needed for tooltip positioning */
 }
 
 .whatsapp-button:hover {

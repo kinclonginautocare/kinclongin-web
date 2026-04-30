@@ -323,40 +323,60 @@ window.addEventListener('scroll', scrollActive)
 
 /*=============== GALLERY GDRIVE ===============*/
 async function loadAutoGallery() {
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwZWU3cwwLLDRgnZUxRn16eOD2eV8DdV6kqpp8zANNAO8INe10YvIFVrJuu-LwOAWnSNQ/exec'; // Ganti pake URL Web App lu
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwZWU3cwwLLDRgnZUxRn16eOD2eV8DdV6kqpp8zANNAO8INe10YvIFVrJuu-LwOAWnSNQ/exec';
     const galleryContainer = document.getElementById('gallery-content');
 
     try {
         const response = await fetch(scriptUrl);
         const images = await response.json();
 
-        // Kosongkan kontainer sebelum diisi
         galleryContainer.innerHTML = '';
 
         images.forEach(img => {
             const driveImgUrl = `https://lh3.googleusercontent.com/d/${img.id}`;
             
             const item = `
-                <a href="${driveImgUrl}" class="gallery__item glightbox" data-gallery="mygallery">
+                <div class="gallery__item" data-img="${driveImgUrl}">
                     <img src="${driveImgUrl}" alt="${img.name}" class="gallery__img" loading="lazy">
                     <div class="gallery__overlay">
                         <i class="ri-add-line"></i>
                     </div>
-                </a>
+                </div>
             `;
             galleryContainer.innerHTML += item;
         });
 
-        // PENTING: Refresh GLightbox setelah gambar masuk
-        const lightbox = GLightbox({
-            selector: '.glightbox'
-        });
-
     } catch (error) {
-        console.error("Waduh, gagal narik galeri:", error);
-        galleryContainer.innerHTML = '<p>Gagal memuat galeri. Cek koneksi atau izin folder Drive.</p>';
+        console.error("gagal narik galeri:", error);
+        galleryContainer.innerHTML = '<p>Gagal memuat galeri. Cek koneksi</p>';
     }
 }
 
-// Panggil fungsinya
+// Panggil
 loadAutoGallery();
+
+/*=============== CUSTOM LIGHTBOX ===============*/
+document.addEventListener("click", function(e) {
+    const item = e.target.closest(".gallery__item");
+    if (!item) return;
+
+    const imgSrc = item.getAttribute("data-img");
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+
+    lightboxImg.src = imgSrc;
+    lightbox.classList.add("active");
+});
+
+// tombol close
+document.querySelector(".lightbox-close").onclick = () => {
+    document.getElementById("lightbox").classList.remove("active");
+};
+
+// klik luar gambar buat close
+document.getElementById("lightbox").addEventListener("click", function(e) {
+    if (e.target.id === "lightbox") {
+        this.classList.remove("active");
+    }
+});
